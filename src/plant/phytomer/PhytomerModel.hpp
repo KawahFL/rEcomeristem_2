@@ -122,7 +122,6 @@ public:
     void compute(double t, bool /* update */)
     {
         if (_leaf_model) {
-            _leaf_model->put(t, LeafModel::DD, _dd);
             _leaf_model->put(t, LeafModel::KILL_LEAF, _kill_leaf);
             _leaf_model->put(t, LeafModel::DELTA_T, _delta_t);
             _leaf_model->put(t, LeafModel::FTSW, _ftsw);
@@ -145,21 +144,22 @@ public:
             _leaf_len = _leaf_model->get< double >(t, LeafModel::LEAF_LEN);
         }
 
-        _internode_model->put(t, InternodeModel::DD, _dd);
-        _internode_model->put(t, InternodeModel::DELTA_T, _delta_t);
-        _internode_model->put(t, InternodeModel::FTSW, _ftsw);
-        _internode_model->put(t, InternodeModel::FCSTR, _fcstr);
-        _internode_model->put < plant::plant_state >(t, InternodeModel::PLANT_STATE, _plant_state);
-        _internode_model->put < plant::plant_phase >(t, InternodeModel::PLANT_PHASE, _plant_phase);
-        _internode_model->put(t, InternodeModel::LIG, _leaf_model->get < double > (t, LeafModel::LIG_T));
-        _internode_model->put(t, InternodeModel::LEAF_PREDIM, _leaf_model->get < double > (t, LeafModel::LEAF_PREDIM));
-        _internode_model->put(t, InternodeModel::IS_LIG, _leaf_model->get < bool > (t, LeafModel::IS_LIG));
-        _internode_model->put(t, InternodeModel::TEST_IC, _test_ic);
-        (*_internode_model)(t);
-        _internode_last_demand = _internode_model->get< double >(t, InternodeModel::LAST_DEMAND);
-        _internode_demand = _internode_model->get< double >(t, InternodeModel::DEMAND);
-        _internode_biomass = _internode_model->get< double >(t, InternodeModel::BIOMASS);
-        _internode_len = _internode_model->get< double >(t, InternodeModel::INTERNODE_LEN);
+        if(_internode_model) {
+            _internode_model->put(t, InternodeModel::DELTA_T, _delta_t);
+            _internode_model->put(t, InternodeModel::FTSW, _ftsw);
+            _internode_model->put(t, InternodeModel::FCSTR, _fcstr);
+            _internode_model->put < plant::plant_state >(t, InternodeModel::PLANT_STATE, _plant_state);
+            _internode_model->put < plant::plant_phase >(t, InternodeModel::PLANT_PHASE, _plant_phase);
+            _internode_model->put(t, InternodeModel::LIG, _leaf_model->get < double > (t, LeafModel::LIG_T));
+            _internode_model->put(t, InternodeModel::LEAF_PREDIM, _leaf_model->get < double > (t, LeafModel::LEAF_PREDIM));
+            _internode_model->put(t, InternodeModel::IS_LIG, _leaf_model->get < bool > (t, LeafModel::IS_LIG));
+            _internode_model->put(t, InternodeModel::TEST_IC, _test_ic);
+            (*_internode_model)(t);
+            _internode_last_demand = _internode_model->get< double >(t, InternodeModel::LAST_DEMAND);
+            _internode_demand = _internode_model->get< double >(t, InternodeModel::DEMAND);
+            _internode_biomass = _internode_model->get< double >(t, InternodeModel::BIOMASS);
+            _internode_len = _internode_model->get< double >(t, InternodeModel::INTERNODE_LEN);
+        }
     }
 
     void kill_leaf(double t)

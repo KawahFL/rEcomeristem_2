@@ -35,7 +35,7 @@ public:
                      CSTE_LIGULO, DENSITY_IN, POT_INER, GROWTH_DELAY, RED_LENGTH, POT_PREDIM, INDEX_};
 
     enum externals { PLANT_PHASE, PLANT_STATE, CULM_PHASE, LIG, IS_LIG, LEAF_PREDIM, FTSW,
-                     DD, DELTA_T, PLASTO, LIGULO, NB_LIG, CULM_DEFICIT, CULM_STOCK,
+                     DELTA_T, PLASTO, LIGULO, NB_LIG, CULM_DEFICIT, CULM_STOCK,
                      BOOL_CROSSED_PLASTO, LAST_LEAF_INDEX, PREVIOUS_IN_PREDIM, PHENOSTAGE, LIGSTAGE,
                      TEST_IC, FCSTR, FCSTRI, FCSTRL, CULM_NBLEAF_PARAM2 };
 
@@ -72,7 +72,6 @@ public:
         External(IS_LIG, &InternodeModel::_is_lig);
         External(LEAF_PREDIM, &InternodeModel::_leaf_predim);
         External(FTSW, &InternodeModel::_ftsw);
-        External(DD, &InternodeModel::_dd);
         External(DELTA_T, &InternodeModel::_delta_t);
         External(PLASTO, &InternodeModel::_plasto);
         External(LIGULO, &InternodeModel::_ligulo);
@@ -156,7 +155,7 @@ public:
             _exp_time = 0;
         } else {
             if (_inter_phase_1 == internode::VEGETATIVE and _inter_phase == internode::REALIZATION) {
-                _inter_len = _iner * _dd;
+                _inter_len = _iner * _delta_t;
                 _exp_time = (_inter_predim - _inter_len) / _iner;
             } else {
                 if (!(_plant_state & plant::NOGROWTH) and (_culm_deficit + _culm_stock >= 0) and (_plant_phase == plant::ELONG or _plant_phase == plant::PI or _plant_phase == plant::PRE_FLO or _plant_phase == plant::FLO)) {
@@ -199,7 +198,7 @@ public:
 
         //InternodeTimeFromApp
         if(t == _first_day) {
-            _time_from_app = _dd;
+            _time_from_app = _delta_t;
         } else {
             if (!(_plant_state & plant::NOGROWTH) and (_culm_deficit + _culm_stock >= 0)) {
                 _time_from_app = _time_from_app + _delta_t;
@@ -345,7 +344,6 @@ private:
     double _lig;
     bool _is_lig;
     double _ftsw;
-    double _dd;
     double _delta_t;
     double _ligulo;
     double _plasto;

@@ -39,7 +39,7 @@ public:
                      IS_APP, IS_DEAD, IS_FIRST, GROWTH_DELAY, POT_LER, RED_LENGTH, POT_PREDIM,
                      WIDTH_LER, POT_LEN, BLADE_LEN };
 
-    enum externals { DD, DELTA_T, FTSW, FCSTR, FCSTRL, FCSTRLLEN,
+    enum externals { DELTA_T, FTSW, FCSTR, FCSTRL, FCSTRLLEN,
                      LEAF_PREDIM_ON_MAINSTEM, PREVIOUS_LEAF_PREDIM,
                      SLA, PLANT_STATE, TEST_IC, MGR, KILL_LEAF, CULM_DEFICIT, CULM_STOCK, SHEATH_LLL,
                      CULM_NBLEAF_PARAM2, PLASTO_NBLEAF_PARAM2, PREDIM_APP_LEAF_MS };
@@ -112,7 +112,6 @@ public:
         External(PREVIOUS_LEAF_PREDIM, &LeafModel::_predim_previous_leaf);
         External(PREDIM_APP_LEAF_MS, &LeafModel::_predim_app_leaf_on_mainstem);
         External(FTSW, &LeafModel::_ftsw);
-        External(DD, &LeafModel::_dd);
         External(DELTA_T, &LeafModel::_delta_t);
         External(SLA, &LeafModel::_sla);
         External(MGR, &LeafModel::_MGR);
@@ -335,7 +334,7 @@ public:
 
         //LeafTimeFromApp
         if (_first_day == t) {
-            _time_from_app = _dd;
+            _time_from_app = _delta_t;
         } else {
             if (!(_plant_state & plant::NOGROWTH) and (_culm_deficit + _culm_stock >= 0)) {
                 _time_from_app = _time_from_app + _delta_t;
@@ -518,7 +517,6 @@ private:
     double _predim_previous_leaf;
     double _predim_app_leaf_on_mainstem;
     double _test_ic;
-    double _dd;
     double _delta_t;
     double _sla;
     bool _kill_leaf;
